@@ -6,8 +6,13 @@ function App() {
   const [text, setText] = useState("");
     
   const handleChange = (event) => {
-      const {name, value} = event.target;
-      setText(value);
+    const {name, value} = event.target;
+    setText(value);
+  }
+
+  function countWord(text){
+    const words = text.trim().split(" ");
+    return words.filter(word => word !== "");
   }
   return (
     <div class="app-container">
