@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react';
 
 function App() {
   const [text, setText] = useState("");
-  const [timeRemaning, setTimeRemaning] = useState(15);
+  const [timeRemaning, setTimeRemaning] = useState(2);
   const [isRunning, setIsRunning] = useState(false);
+  const [wordLength, setWordLength] = useState(0);
 
   const handleStart = () => {
-    console.log("working");
     setIsRunning(true);
+    setWordLength(0);
+    setText("")
   }
   const handleChange = (event) => {
     const {name, value} = event.target;
@@ -18,7 +20,7 @@ function App() {
 
   function countWord(text){
     const words = text.trim().split(" ");
-    return words.filter(word => word !== "");
+    return words.filter(word => word !== "").length;
   }
 
   useEffect(() => {
@@ -26,13 +28,14 @@ function App() {
       setTimeout( () => {
         setTimeRemaning(time => time -1);
       }, 1000) 
-    }else if(isRunning === 0){
+    }else if(timeRemaning === 0){
       setIsRunning(false);
+      setTimeRemaning(2);
+      setWordLength(countWord(text));
     }
   }, 
   [timeRemaning, isRunning])
 
-  console.log("hook == ", timeRemaning);
 
   return (
     <div className="app-container">
@@ -42,10 +45,11 @@ function App() {
             value={text}
             name="text"
             onChange={handleChange}
+            disabled={!isRunning}
         />
         <h4>Amount of time remaining: {timeRemaning} </h4>
-        <button onClick={handleStart}>Start</button>
-        <h1>Word Count: </h1>
+        <button disabled={isRunning} onClick={handleStart}>Start</button>
+        <h1>Word Count: {wordLength}</h1>
     </div>   
   );
 }
